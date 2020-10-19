@@ -1,7 +1,3 @@
-
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +49,7 @@ public class Restaurant {
                 +"Location:"+ location + "\n"
                 +"Opening time:"+ openingTime +"\n"
                 +"Closing time:"+ closingTime +"\n"
-                +"Menu:"+"\n"+menu);
+                +"Menu:"+"\n"+getMenu());
 
     }
 
