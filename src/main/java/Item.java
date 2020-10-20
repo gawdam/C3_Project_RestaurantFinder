@@ -7,14 +7,14 @@ public class Item {
         this.price = price;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
     @Override
     public String toString(){
-        return "{" +
-                "item=" + name +
-                ", price='" + price +
-                '}';
+        return  name + ":"
+                + price
+                + "\n"
+                ;
     }
 }
