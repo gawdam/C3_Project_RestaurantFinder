@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -5,8 +6,8 @@ import java.util.List;
 public class Restaurant {
     private String name;
     private String location;
-    public int openingTime;
-    public int closingTime;
+    private int openingTime;
+    private int closingTime;
     private List<Item> menu = new ArrayList<Item>();
 
     public Restaurant(String name, String location, int openingTime, int closingTime) {
@@ -53,8 +54,24 @@ public class Restaurant {
 
     }
 
+    public int calculateOrderTotal(String...itemNames) throws itemNotFoundException {
+        int total = 0;
+        for(String itemName: itemNames){
+            Item item = findItemByName(itemName);
+            if(item == null)
+                throw new itemNotFoundException(itemName);
+            total = total + item.getPrice();
+        }
+        return total;
+    }
+
     public String getName() {
         return name;
     }
-
+    public int getOpeningTime(){
+        return openingTime;
+    }
+    public int getClosingTime(){
+        return closingTime;
+    }
 }
