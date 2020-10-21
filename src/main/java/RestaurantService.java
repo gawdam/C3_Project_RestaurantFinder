@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class RestaurantFinder {
+public class RestaurantService {
     private static List<Restaurant> restaurants = new ArrayList<>();
 
     public Restaurant searchForRestaurant(String name) throws restaurantNotFoundException {
@@ -10,12 +10,10 @@ public class RestaurantFinder {
 
         if (foundRestaurant == null) {
             throw new restaurantNotFoundException(name);
-        } else {
-            foundRestaurant.getDetails();
         }
-        System.out.println("Restaurant open?: " + isRestaurantOpen(foundRestaurant));
-        return foundRestaurant;
-
+        else {
+            return foundRestaurant;
+        }
     }
 
     public Restaurant findRestaurantByName(String restaurantName) {
@@ -41,10 +39,14 @@ public class RestaurantFinder {
         return restaurantToBeRemoved;
     }
 
-    public static boolean isRestaurantOpen(Restaurant restaurant) {
+    public static boolean isRestaurantOpen(Restaurant restaurant, int hour) {
+        return (hour >= restaurant.openingTime && hour <= restaurant.closingTime);
+    }
+
+    public int getCurrentHour(){
         Calendar rightNow = Calendar.getInstance();
         int hour = rightNow.get(Calendar.HOUR_OF_DAY);
-        return (hour > restaurant.openingTime && hour < restaurant.closingTime);
+        return hour;
     }
 
     public List<Restaurant> getRestaurants() {
