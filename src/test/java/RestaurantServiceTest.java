@@ -1,11 +1,9 @@
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import java.time.LocalDateTime;
-import java.util.Calendar;
-
+import java.time.LocalTime;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
 
 
 class RestaurantServiceTest {
@@ -15,18 +13,20 @@ class RestaurantServiceTest {
     @Test
     @BeforeEach
     public void BeforeEach(){
-        restaurant = service.addRestaurant("Amelie's cafe","Chennai",10,21);
+        LocalTime openingTime = LocalTime.parse("10:30:00");
+        LocalTime closingTime = LocalTime.parse("22:00:00");
+        restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
         restaurant.addToMenu("Sweet corn soup",119);
         restaurant.addToMenu("Vegetable lasagne", 269);
     }
 
     @Test
-    public void searching_for_existing_restaurant_should_not_return_null() throws restaurantNotFoundException {
+    public void searching_for_existing_restaurant_should_not_return_null() {
         Restaurant searchedRestaurant = service.findRestaurantByName("Amelie's cafe");
         assertNotNull(searchedRestaurant);
     }
     @Test
-    public void searching_for_non_existing_restaurant_should_return_null() throws restaurantNotFoundException {
+    public void searching_for_non_existing_restaurant_should_return_null() {
         Restaurant searchedRestaurant = service.findRestaurantByName("Pantry d'or");
         assertNull(searchedRestaurant);
     }
@@ -44,15 +44,21 @@ class RestaurantServiceTest {
     @Test
     public void is_restaurant_open_should_return_true_if_time_is_between_opening_and_closing_time(){
 
-        assertTrue(service.isRestaurantOpen(restaurant));
+        assertTrue(restaurant.isRestaurantOpen());
     }
     @Test
     public void is_restaurant_open_should_return_false_if_time_is_outside_opening_and_closing_time(){
-        Restaurant earlyClose = Mockito.mock(Restaurant.class);
-        Mockito.when(earlyClose.getClosingTime()).thenReturn(12);
-        Mockito.when(earlyClose.getOpeningTime()).thenReturn(10);
-        assertFalse(service.isRestaurantOpen(earlyClose));
+        LocalTime openingTime = LocalTime.parse("10:30:00");
+        LocalTime closingTime = LocalTime.parse("22:00:00");
+        Restaurant newRestaurant= new Restaurant("Saravana Bhavan","KK Nagar",openingTime,closingTime);
+
+        Restaurant spiedRestaurant = Mockito.spy(newRestaurant);
+        LocalTime midnight = LocalTime.parse("00:00:00");
+        doReturn(midnight).when(spiedRestaurant).getCurrentTime();
+
+        assertFalse(spiedRestaurant.isRestaurantOpen());
     }
+
 
 
     //------------------------------------------------------------------------------
@@ -65,13 +71,19 @@ class RestaurantServiceTest {
         service.removeRestaurant("Amelie's cafe");
         assertEquals(initialNumberOfRestaurants-1, service.getRestaurants().size());
     }
+    
+    @Test
+    public void removing_restaurant_that_does_not_exist_should_throw_exception() throws restaurantNotFoundException {
+        assertThrows(restaurantNotFoundException.class,()->service.removeRestaurant("Pantry d'or"));
+    }
 
     @Test
     public void add_restaurant_should_increase_list_of_restaurants_size_by_1(){
         int initialNumberOfRestaurants = service.getRestaurants().size();
-        Restaurant newRestaurant = service.addRestaurant("Pumpkin Tales","Chennai",12,22);
+        service.addRestaurant("Pumpkin Tales","Chennai",LocalTime.parse("12:00:00"),LocalTime.parse("23:00:00"));
         assertEquals(initialNumberOfRestaurants + 1,service.getRestaurants().size());
     }
+    
     @Test
     public void adding_item_to_menu_should_increase_menu_size_by_1(){
         Restaurant restaurant = service.findRestaurantByName("Amelie's cafe");
@@ -86,7 +98,7 @@ class RestaurantServiceTest {
         assertEquals(initialMenuSize-1,restaurant.getMenu().size());
     }
     @Test
-    public void removing_item_that_does_not_exist_should_throw_exception() throws itemNotFoundException {
+    public void removing_item_that_does_not_exist_should_throw_exception() {
         assertThrows(itemNotFoundException.class,
                 ()->restaurant.removeFromMenu("French fries"));
     }

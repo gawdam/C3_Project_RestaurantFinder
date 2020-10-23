@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,11 +16,8 @@ public class RestaurantService {
         }
         return null;
     }
-    public boolean isRestaurantOpen(Restaurant restaurant) {
-        int hour = LocalDateTime.now().getHour();
-        return (hour >= restaurant.getOpeningTime() && hour < restaurant.getClosingTime());
-    }
-    public Restaurant addRestaurant(String name, String location, int openingTime, int closingTime) {
+
+    public Restaurant addRestaurant(String name, String location, LocalTime openingTime, LocalTime closingTime) {
         Restaurant newRestaurant = new Restaurant(name, location, openingTime, closingTime);
         restaurants.add(newRestaurant);
         return newRestaurant;
