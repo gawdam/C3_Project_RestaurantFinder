@@ -40,27 +40,6 @@ class RestaurantServiceTest {
     public void calculateOrderTotal_should_return_388_when_lasagna_and_soup_are_ordered() throws itemNotFoundException {
     assertEquals(388,restaurant.calculateOrderTotal("Sweet corn soup","Vegetable lasagne"));
     }
-
-    @Test
-    public void is_restaurant_open_should_return_true_if_time_is_between_opening_and_closing_time(){
-
-        assertTrue(restaurant.isRestaurantOpen());
-    }
-    @Test
-    public void is_restaurant_open_should_return_false_if_time_is_outside_opening_and_closing_time(){
-        LocalTime openingTime = LocalTime.parse("10:30:00");
-        LocalTime closingTime = LocalTime.parse("22:00:00");
-        Restaurant newRestaurant= new Restaurant("Saravana Bhavan","KK Nagar",openingTime,closingTime);
-
-        Restaurant spiedRestaurant = Mockito.spy(newRestaurant);
-        LocalTime midnight = LocalTime.parse("00:00:00");
-        doReturn(midnight).when(spiedRestaurant).getCurrentTime();
-
-        assertFalse(spiedRestaurant.isRestaurantOpen());
-    }
-
-
-
     //------------------------------------------------------------------------------
 
 
@@ -82,25 +61,6 @@ class RestaurantServiceTest {
         int initialNumberOfRestaurants = service.getRestaurants().size();
         service.addRestaurant("Pumpkin Tales","Chennai",LocalTime.parse("12:00:00"),LocalTime.parse("23:00:00"));
         assertEquals(initialNumberOfRestaurants + 1,service.getRestaurants().size());
-    }
-    
-    @Test
-    public void adding_item_to_menu_should_increase_menu_size_by_1(){
-        Restaurant restaurant = service.findRestaurantByName("Amelie's cafe");
-        int initialMenuSize = restaurant.getMenu().size();
-        restaurant.addToMenu("Sizzling brownie",319);
-        assertEquals(initialMenuSize+1,restaurant.getMenu().size());
-    }
-    @Test
-    public void removing_item_from_menu_should_decrease_menu_size_by_1() throws itemNotFoundException {
-        int initialMenuSize = restaurant.getMenu().size();
-        restaurant.removeFromMenu("Vegetable lasagne");
-        assertEquals(initialMenuSize-1,restaurant.getMenu().size());
-    }
-    @Test
-    public void removing_item_that_does_not_exist_should_throw_exception() {
-        assertThrows(itemNotFoundException.class,
-                ()->restaurant.removeFromMenu("French fries"));
     }
     //-------------------------------------------------------
 }
