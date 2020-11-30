@@ -20,14 +20,14 @@ class RestaurantServiceTest {
 
     //>>>>>>>>>>>>>>>>>>>>>>SEARCHING<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     @Test
-    public void searching_for_existing_restaurant_should_not_return_null() {
+    public void searching_for_existing_restaurant_should_return_expected_restaurant_object() throws restaurantNotFoundException {
         Restaurant searchedRestaurant = service.findRestaurantByName("Amelie's cafe");
-        assertNotNull(searchedRestaurant);
+        assertEquals(restaurant.getName(),searchedRestaurant.getName());
+        assertEquals(restaurant.getMenu(),searchedRestaurant.getMenu());
     }
     @Test
-    public void searching_for_non_existing_restaurant_should_return_null() {
-        Restaurant searchedRestaurant = service.findRestaurantByName("Pantry d'or");
-        assertNull(searchedRestaurant);
+    public void searching_for_non_existing_restaurant_should_throw_exception() throws restaurantNotFoundException {
+        assertThrows(restaurantNotFoundException.class,()->service.findRestaurantByName("Pantry d'or"));
     }
     //<<<<<<<<<<<<<<<<<<<<SEARCHING>>>>>>>>>>>>>>>>>>>>>>>>>>
 

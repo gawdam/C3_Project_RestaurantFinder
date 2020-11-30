@@ -24,8 +24,12 @@ class RestaurantTest {
     //>>>>>>>>>>>>>>>>>>>>>>OPEN/CLOSED<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     @Test
     public void is_restaurant_open_should_return_true_if_time_is_between_opening_and_closing_time(){
-
-        assertTrue(restaurant.isRestaurantOpen());
+        long nanoSum = restaurant.openingTime.toNanoOfDay()+restaurant.closingTime.toNanoOfDay();
+        LocalTime openTime = LocalTime.ofNanoOfDay(nanoSum/2);
+        System.out.println(openTime);
+        Restaurant spiedRestaurant = Mockito.spy(restaurant);
+        doReturn(openTime).when(spiedRestaurant).getCurrentTime();
+        assertTrue(spiedRestaurant.isRestaurantOpen());
     }
     @Test
     public void is_restaurant_open_should_return_false_if_time_is_outside_opening_and_closing_time(){

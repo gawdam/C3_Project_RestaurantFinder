@@ -6,13 +6,13 @@ public class RestaurantService {
     private static List<Restaurant> restaurants = new ArrayList<>();
 
 
-    public Restaurant findRestaurantByName(String restaurantName){
+    public Restaurant findRestaurantByName(String restaurantName) throws restaurantNotFoundException {
         for (Restaurant restaurant : restaurants) {
             if (restaurant.getName().equals(restaurantName)) {
                 return restaurant;
             }
         }
-        return null;
+        throw new restaurantNotFoundException(restaurantName);
     }
 
     public Restaurant addRestaurant(String name, String location, LocalTime openingTime, LocalTime closingTime) {
@@ -23,8 +23,6 @@ public class RestaurantService {
 
     public Restaurant removeRestaurant(String restaurantName) throws restaurantNotFoundException {
         Restaurant restaurantToBeRemoved = findRestaurantByName(restaurantName);
-        if (restaurantToBeRemoved == null)
-            throw new restaurantNotFoundException(restaurantName);
         restaurants.remove(restaurantToBeRemoved);
         return restaurantToBeRemoved;
     }

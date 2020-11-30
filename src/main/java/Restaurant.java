@@ -52,6 +52,9 @@ public class Restaurant {
 
         menu.remove(itemToBeRemoved);
     }
+    public String getLocation(){
+        return location;
+    }
     public void getDetails(){
         System.out.println("Restaurant:"+ name + "\n"
                 +"Location:"+ location + "\n"
